@@ -55,7 +55,7 @@ export const KINDS: Record<Kind, KindInfo> = {
   battery: { label: 'Battery', unit: 'V', symbol: 'V', default: 9, editable: true, blurb: 'Ideal voltage source. The long plate is +.' },
   resistor: { label: 'Resistor', unit: 'Ω', symbol: 'R', default: 100, editable: true, blurb: 'Limits current. V = I·R.' },
   bulb: { label: 'Bulb', unit: 'Ω', symbol: 'L', default: 20, editable: true, blurb: 'A resistor that glows with power P = V·I.' },
-  led: { label: 'LED', unit: '', symbol: 'D', default: 0, editable: false, blurb: 'Only conducts one way (anode → cathode), drops ~1.9 V. Needs a resistor!' },
+  led: { label: 'LED', unit: '', symbol: 'D', default: 0, editable: false, blurb: 'Only conducts one way (anode to cathode), drops ~1.9 V. Needs a resistor!' },
   switch: { label: 'Switch', unit: '', symbol: 'S', default: 0, editable: false, blurb: 'Click to open/close the circuit.' },
   isource: { label: 'Current source', unit: 'A', symbol: 'I', default: 0.01, editable: true, blurb: 'Forces a fixed current in the arrow direction.' },
 }

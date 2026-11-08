@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Sandbox } from './pages/Sandbox'
 import { Learn } from './pages/Learn'
 import { Quiz } from './pages/Quiz'
-import { load, save } from './state/storage'
 
 type Page = 'sandbox' | 'learn' | 'quiz'
 const TABS: { id: Page; label: string }[] = [
@@ -18,31 +17,35 @@ function parse(): { page: Page; arg?: string } {
 
 export default function App() {
   const [route, setRoute] = useState(parse)
-  const [theme, setTheme] = useState<'dark' | 'light'>(() =>
-    load('iee.theme', window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark'))
+  const [tutorialRequest, setTutorialRequest] = useState(0)
 
   useEffect(() => {
     const on = () => setRoute(parse())
     window.addEventListener('hashchange', on)
     return () => window.removeEventListener('hashchange', on)
   }, [])
-  useEffect(() => { document.documentElement.dataset.theme = theme; save('iee.theme', theme) }, [theme])
 
   return (
     <>
       <header className="topbar">
-        <a className="brand" href="#/sandbox"><span className="bolt">⚡</span> Interactive EE</a>
+        <a className="brand" href="#/sandbox">
+          <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden>
+            <rect width="32" height="32" rx="6" className="logo-bg" />
+            <path d="M4 16h6l2-5 4 10 3-8 2 3h7" className="logo-line" />
+          </svg>
+          Interactive EE
+        </a>
         <nav>
           {TABS.map((t) => (
             <a key={t.id} href={`#/${t.id}`} className={route.page === t.id ? 'active' : ''}>{t.label}</a>
           ))}
         </nav>
-        <button className="btn ghost" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label="Toggle theme">
-          {theme === 'dark' ? '☀' : '☾'}
+        <button className="btn" onClick={() => { if (route.page !== 'sandbox') location.hash = '#/sandbox'; setTutorialRequest((n) => n + 1) }}>
+          Tutorial
         </button>
       </header>
       <main>
-        {route.page === 'sandbox' && <Sandbox shared={route.arg} />}
+        {route.page === 'sandbox' && <Sandbox shared={route.arg} tutorialRequest={tutorialRequest} />}
         {route.page === 'learn' && <Learn />}
         {route.page === 'quiz' && <Quiz />}
       </main>

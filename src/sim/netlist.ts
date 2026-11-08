@@ -31,7 +31,7 @@ export const EMPTY: Analysis = {
   nodeV: new Map(), parts: new Map(), wires: new Map(), warnings: [], converged: true, empty: true, ref: null,
 }
 
-const clean = (x: number) => (Math.abs(x) < 1e-12 ? 0 : x)
+const clean = (x: number) => (Math.abs(x) < 1e-10 ? 0 : x)
 
 export function analyze(c: Circuit, opts: AnalyzeOpts = {}): Analysis {
   const wireG = opts.wireG ?? 1000

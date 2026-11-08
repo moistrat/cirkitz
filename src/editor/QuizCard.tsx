@@ -58,10 +58,10 @@ export function QuizCard({ q, onResult, onNext, nextLabel = 'Next question' }: P
         />
         <span className="unit">{q.unit}</span>
         {!done && <button className="btn primary" type="submit">Check</button>}
-        {done && <button className="btn primary" type="submit" autoFocus>{nextLabel} →</button>}
+        {done && <button className="btn primary" type="submit" autoFocus>{nextLabel}</button>}
       </div>
       {note && state !== 'right' && <p className="q-note">{note}</p>}
-      {state === 'right' && <p className="q-good">✓ Correct! {formatSI(q.answer, q.unit)}</p>}
+      {state === 'right' && <p className="q-good">Correct. {formatSI(q.answer, q.unit)}</p>}
       {!done && tries >= 1 && (
         <button type="button" className="btn ghost" onClick={() => { setState('revealed'); setNote('') }}>
           Show answer

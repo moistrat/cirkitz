@@ -127,7 +127,7 @@ function lvl3(r: Rng): Question {
   if (ask === 'P')
     return finish({ ...base, target: [L.branches[k]], prompt: `A ${f.V(V)} battery feeds parallel resistors: ${desc}. How much power does ${names[k]} dissipate?`, unit: 'W', answer: V * Is[k], explanation: [s1, sk, `P = V × I = ${f.V(V)} × ${f.A(Is[k])} = ${f.W(V * Is[k])}.`] })
   if (ask === 'Itot')
-    return finish({ ...base, target: [L.battery], prompt: `A ${f.V(V)} battery feeds parallel resistors: ${desc}. What total current does the battery supply?`, unit: 'A', answer: Itot, explanation: [s1, `Each branch: I = V / R → ${Is.map(f.A).join(', ')}.`, sTot] })
+    return finish({ ...base, target: [L.battery], prompt: `A ${f.V(V)} battery feeds parallel resistors: ${desc}. What total current does the battery supply?`, unit: 'A', answer: Itot, explanation: [s1, `Each branch: I = V / R gives ${Is.map(f.A).join(', ')}.`, sTot] })
   return finish({ ...base, target: [L.battery], prompt: `Resistors ${desc} are in parallel across ${f.V(V)}. What is the equivalent resistance?`, unit: 'Ω', answer: Req,
     explanation: [s1, sTot, `R_eq = V / I_total = ${f.V(V)} / ${f.A(Itot)} = ${f.R(Req)}.`, `(Equivalently 1/R_eq = ${Rs.map((x) => `1/${f.R(x)}`).join(' + ')}.)`] })
 }

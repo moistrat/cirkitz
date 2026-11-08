@@ -10,6 +10,9 @@ import { Question, sandboxQuestion } from '../sim/quizGen'
 import { Circuit, KINDS, Kind, Rot } from '../sim/types'
 import { initialState, reducer } from '../state/editorState'
 import { load, save } from '../state/storage'
+import { Tutorial } from '../tutorial/Tutorial'
+import { STEPS } from '../tutorial/steps'
+import { Guide } from '../tutorial/steps'
 
 const STORE = 'iee.sandbox.v1'
 const ORDER: Kind[] = ['battery', 'resistor', 'bulb', 'led', 'switch', 'isource']
@@ -19,8 +22,16 @@ function startCircuit(): Circuit {
   return isCircuit(saved) && saved.parts.length ? saved : PRESETS[0].build()
 }
 
-export function Sandbox({ shared }: { shared?: string }) {
-  const [state, dispatch] = useReducer(reducer, undefined, () => initialState(startCircuit()))
+const TOUR_SEEN = 'iee.tutorial.seen'
+
+export function Sandbox({ shared, tutorialRequest = 0 }: { shared?: string; tutorialRequest?: number }) {
+  const [main, dispatchMain] = useReducer(reducer, undefined, () => initialState(startCircuit()))
+  const [tutState, dispatchTut] = useReducer(reducer, undefined, () => initialState())
+  // null = not in tutorial. The tutorial runs on its own scratch board so saved work is never touched.
+  const [tour, setTour] = useState<number | null>(() => (!shared && !load<boolean>(TOUR_SEEN, false) ? 0 : null))
+  const [probed, setProbed] = useState(false)
+  const state = tour !== null ? tutState : main
+  const dispatch = tour !== null ? dispatchTut : dispatchMain
   const [tool, setTool] = useState<Tool>({ type: 'select' })
   const [flowOn, setFlowOn] = useState(true)
   const [showValues, setShowValues] = useState(true)
@@ -33,13 +44,34 @@ export function Sandbox({ shared }: { shared?: string }) {
   const names = useMemo(() => designators(circuit), [circuit])
   const part = circuit.parts.find((p) => p.id === selected)
 
-  useEffect(() => { save(STORE, circuit) }, [circuit])
+  useEffect(() => { if (tour === null) save(STORE, main.circuit) }, [main.circuit, tour])
   useEffect(() => { if (quiz) setQuiz(null) }, [circuit]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const startTour = () => {
+    dispatchTut({ type: 'reset' })
+    setTool({ type: 'select' })
+    setQuiz(null)
+    setProbed(false)
+    setTour(0)
+  }
+  const endTour = () => {
+    save(TOUR_SEEN, true)
+    setTour(null)
+    setTool({ type: 'select' })
+    setQuiz(null)
+  }
+  const advanceTour = () => setTour((t) => (t === null ? t : Math.min(t + 1, STEPS.length - 1)))
+  useEffect(() => { if (tutorialRequest > 0) startTour() }, [tutorialRequest]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const guides: Guide | undefined = useMemo(() => {
+    if (tour === null) return undefined
+    return STEPS[tour].guide?.({ circuit, analysis, selected, tool, quizOpen: !!quiz, probed })
+  }, [tour, circuit, analysis, selected, tool, quiz, probed])
 
   useEffect(() => {
     if (!shared) return
     const c = decodeCircuit(shared)
-    if (c) dispatch({ type: 'load', circuit: c })
+    if (c) dispatchMain({ type: 'load', circuit: c })
     history.replaceState(null, '', '#/sandbox')
   }, [shared])
 
@@ -64,7 +96,7 @@ export function Sandbox({ shared }: { shared?: string }) {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [selected, tool])
+  }, [selected, tool, dispatch])
 
   const exportJson = () => {
     const url = URL.createObjectURL(new Blob([JSON.stringify(circuit, null, 2)], { type: 'application/json' }))
@@ -130,8 +162,8 @@ export function Sandbox({ shared }: { shared?: string }) {
 
       <section className="stage">
         <div className="toolbar card">
-          <button className="btn" onClick={() => dispatch({ type: 'undo' })} disabled={!state.past.length} title="Undo (Ctrl/⌘Z)">↶ Undo</button>
-          <button className="btn" onClick={() => dispatch({ type: 'redo' })} disabled={!state.future.length} title="Redo">↷ Redo</button>
+          <button className="btn" onClick={() => dispatch({ type: 'undo' })} disabled={!state.past.length} title="Undo (Ctrl/⌘Z)">Undo</button>
+          <button className="btn" onClick={() => dispatch({ type: 'redo' })} disabled={!state.future.length} title="Redo">Redo</button>
           <button className="btn" onClick={() => { if (!circuit.parts.length || confirm('Clear the whole circuit?')) dispatch({ type: 'clear' }) }}>Clear</button>
           <span className="spacer" />
           <label className="check"><input type="checkbox" checked={flowOn} onChange={(e) => setFlowOn(e.target.checked)} /> Current flow</label>
@@ -145,7 +177,8 @@ export function Sandbox({ shared }: { shared?: string }) {
         <div className="canvas-wrap card">
           <Canvas circuit={circuit} analysis={analysis} dispatch={dispatch} editable tool={tool}
             selected={selected} flowOn={flowOn} showValues={showValues}
-            hideMeasurements={!!quiz} highlight={quiz?.target} />
+            hideMeasurements={!!quiz} highlight={quiz?.target}
+            guides={guides} onProbe={() => setProbed(true)} />
           {!circuit.parts.length && (
             <div className="empty-hint">
               <h3>Start building</h3>
@@ -155,10 +188,16 @@ export function Sandbox({ shared }: { shared?: string }) {
         </div>
         <p className="hint">{hint}</p>
         {toast && <div className="toast" role="status">{toast}</div>}
+      {tour !== null && (
+          <Tutorial index={tour} onAdvance={advanceTour} onExit={endTour} onRestart={startTour}
+            ctx={{ circuit, analysis, selected, tool, quizOpen: !!quiz, probed }}
+            api={{ dispatch, circuit, setTool }} />
+        )}
       </section>
 
+
       <aside className="side">
-        {analysis.warnings.map((w) => <div key={w} className="card warn">⚠ {w}</div>)}
+        {analysis.warnings.map((w) => <div key={w} className="card warn"><b>Warning</b>{w}</div>)}
 
         {quiz ? (
           <div>
@@ -191,12 +230,12 @@ export function Sandbox({ shared }: { shared?: string }) {
                 <ul className="tips">
                   <li>Charges move from + around to −. Faster = more current.</li>
                   <li>Wire color shows voltage: red is high, blue is low.</li>
-                  <li>The ⏚ symbol marks 0 V (the first battery’s − side).</li>
+                  <li>The ground symbol marks 0 V, the first battery’s negative side.</li>
                   <li>Hover any wire or terminal to read its voltage.</li>
                 </ul>
               </>
             )}
-            <button className="btn primary wide" onClick={startQuiz}>🎯 Quiz me on this circuit</button>
+            <button className="btn primary wide quiz-btn" onClick={startQuiz}>Quiz me on this circuit</button>
           </div>
         )}
       </aside>

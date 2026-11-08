@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Circuit, Part, Pt, Rot, key, terminals } from '../sim/types'
+import { Circuit, Part, Pt, Rot, Wire, key, terminals } from '../sim/types'
 import { Analysis } from '../sim/netlist'
 import { formatSI } from '../sim/format'
 import { lPath, makePart, wirePath } from '../sim/build'
@@ -31,7 +31,15 @@ interface Props {
   highlight?: string[]
   /** Fit viewBox to the circuit instead of showing the full editing grid. */
   fit?: boolean
+  /** dashed outlines showing where to place parts / draw wires (tutorial) */
+  guides?: { parts: Part[]; wires: Wire[] }
+  /** called when the voltage probe is showing a reading */
+  onProbe?: () => void
 }
+
+/** wire color scale: slate at low voltage to mint at high voltage */
+const LOW = [84, 94, 106]
+const HIGH = [79, 209, 165]
 
 const dist = (px: number, py: number, a: Pt, b: Pt) => {
   const dx = b.x - a.x, dy = b.y - a.y
@@ -49,7 +57,7 @@ type Drag =
 
 export function Canvas({
   circuit, analysis, dispatch, editable = false, tool = { type: 'select' }, selected = null,
-  showValues = true, flowOn = true, hideMeasurements = false, labelOverrides = {}, highlight = [], fit = false,
+  showValues = true, flowOn = true, hideMeasurements = false, labelOverrides = {}, highlight = [], fit = false, guides, onProbe,
 }: Props) {
   const svgRef = useRef<SVGSVGElement>(null)
   const [hover, setHover] = useState<Pt | null>(null)
@@ -86,9 +94,9 @@ export function Canvas({
     return [Math.min(...vs), Math.max(...vs)]
   }, [analysis])
   const vColor = (v: number | undefined) => {
-    if (v === undefined || analysis.empty) return 'var(--wire)'
+    if (v === undefined || analysis.empty) return 'rgb(' + LOW.join(',') + ')'
     const t = vmax - vmin < 1e-9 ? 0 : (v - vmin) / (vmax - vmin)
-    return `hsl(${215 - 215 * t} 85% 56%)`
+    return 'rgb(' + LOW.map((c, i) => Math.round(c + (HIGH[i] - c) * t)).join(',') + ')'
   }
 
   // ---------- flow edges ----------
@@ -224,6 +232,8 @@ export function Canvas({
     ? makePart(tool.kind, hover.x, hover.y, tool.rot, undefined, 'ghost') : null
   const probeKey = hover && editable && tool.type === 'select' && !drag ? key(hover) : null
   const probeV = probeKey ? analysis.nodeV.get(probeKey) : undefined
+  const probing = probeKey !== null && probeV !== undefined
+  useEffect(() => { if (probing) onProbe?.() }, [probing]) // eslint-disable-line react-hooks/exhaustive-deps
   const refPt = analysis.ref ? (analysis.ref.split(',').map(Number) as [number, number]) : null
 
   return (
@@ -247,6 +257,24 @@ export function Canvas({
             ))}
           </g>
         </>
+      )}
+
+      {/* tutorial guides */}
+      {guides && (
+        <g style={{ pointerEvents: 'none' }}>
+          {guides.wires.map((w) => (
+            <line key={w.id} x1={w.a.x * G} y1={w.a.y * G} x2={w.b.x * G} y2={w.b.y * G} className="guide-wire" />
+          ))}
+          {guides.parts.map((p) => {
+            const [a, b] = terminals(p)
+            return (
+              <g key={p.id}>
+                <line x1={a.x * G} y1={a.y * G} x2={b.x * G} y2={b.y * G} className="guide-part" strokeLinecap="round" />
+                <PartSymbol part={p} ghost />
+              </g>
+            )
+          })}
+        </g>
       )}
 
       {/* wires */}

@@ -39,7 +39,7 @@ export const LESSONS: Lesson[] = [
     summary: 'Voltage, current and resistance are tied together.',
     body: [
       'Voltage (V) is the “push” a battery gives charges. Resistance (R) is how much a part opposes the flow. Current (I) is how much charge actually flows each second.',
-      'Georg Ohm found that for a resistor the current is proportional to the voltage and inversely proportional to the resistance. Watch the moving charges: more current → they move faster.',
+      'Georg Ohm found that for a resistor the current is proportional to the voltage and inversely proportional to the resistance. Watch the moving charges: more current means they move faster.',
       'Power is the rate energy is converted to heat: P = V × I. A resistor’s heat grows with the square of the current (P = I²R), which is why high currents get hot.',
     ],
     formula: 'I = V / R     V = I·R     P = V·I',
@@ -132,7 +132,7 @@ export const LESSONS: Lesson[] = [
     summary: 'LEDs are not resistors: they drop a fixed voltage and need protection.',
     body: [
       'An LED only conducts one way and, once on, holds about 1.9 V across itself no matter the current. Without a limit, the current shoots up and the LED burns out.',
-      'The series resistor takes the leftover voltage: R = (V_supply − V_LED) / I. Typical LED current is 5–20 mA. Try a tiny resistor and watch the warning.',
+      'The series resistor takes the leftover voltage: R = (V_supply - V_LED) / I. Typical LED current is 5–20 mA. Try a tiny resistor and watch the warning.',
     ],
     formula: 'I = (V_supply − V_LED) / R     R = (V_supply − 1.9 V) / I_wanted',
     params: [

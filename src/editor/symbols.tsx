@@ -41,7 +41,7 @@ export function SymbolBody({ kind, closed, glow }: { kind: Kind; closed: boolean
           {glow > 0.01 && (
             <>
               <circle cx={32} cy={0} r={22 + glow * 22} fill="url(#glow-bulb)" opacity={glow} />
-              <circle cx={32} cy={0} r={16} fill="#ffd166" opacity={glow * 0.9} />
+              <circle cx={32} cy={0} r={16} fill="#fff1d6" opacity={glow * 0.9} />
             </>
           )}
           <path className="sym" d="M0,0H16M48,0H64" />
@@ -54,7 +54,7 @@ export function SymbolBody({ kind, closed, glow }: { kind: Kind; closed: boolean
         <g>
           {glow > 0.01 && <circle cx={32} cy={0} r={18 + glow * 24} fill="url(#glow-led)" opacity={glow} />}
           <path className="sym" d="M0,0H20M44,0H64" />
-          <path className="sym" d="M20,-12V12L44,0Z" fill={glow > 0.01 ? `rgba(255,70,70,${0.3 + glow * 0.7})` : 'none'} />
+          <path className="sym" d="M20,-12V12L44,0Z" fill={glow > 0.01 ? `rgba(255,90,105,${0.3 + glow * 0.7})` : 'none'} />
           <path className="sym" d="M44,-12V12" />
           <path className="sym" d="M36,-16L44,-26M44,-26h-5M44,-26v5M44,-14L52,-24M52,-24h-5M52,-24v5" strokeWidth={1.5} />
         </g>
@@ -129,12 +129,12 @@ export function GlowDefs() {
   return (
     <defs>
       <radialGradient id="glow-bulb">
-        <stop offset="0%" stopColor="#ffe9a8" stopOpacity="0.95" />
-        <stop offset="100%" stopColor="#ffb703" stopOpacity="0" />
+        <stop offset="0%" stopColor="#fff4e0" stopOpacity="0.95" />
+        <stop offset="100%" stopColor="#ffd9a0" stopOpacity="0" />
       </radialGradient>
       <radialGradient id="glow-led">
-        <stop offset="0%" stopColor="#ff6b6b" stopOpacity="0.9" />
-        <stop offset="100%" stopColor="#ff3b3b" stopOpacity="0" />
+        <stop offset="0%" stopColor="#ff6b7a" stopOpacity="0.9" />
+        <stop offset="100%" stopColor="#ff4455" stopOpacity="0" />
       </radialGradient>
     </defs>
   )

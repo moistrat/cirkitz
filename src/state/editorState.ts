@@ -23,6 +23,7 @@ export type Action =
   | { type: 'undo' }
   | { type: 'redo' }
   | { type: 'beginDrag' }
+  | { type: 'reset'; circuit?: Circuit }
 
 const LIMIT = 100
 
@@ -55,6 +56,7 @@ export function reducer(s: EditorState, a: Action): EditorState {
     case 'toggleSwitch': return commit(s, mapPart(c, a.id, (p) => ({ ...p, closed: !p.closed })))
     case 'select': return { ...s, selected: a.id }
     case 'load': return { circuit: a.circuit, selected: null, past: [...s.past.slice(-LIMIT), c], future: [] }
+    case 'reset': return initialState(a.circuit)
     case 'clear': return commit(s, { parts: [], wires: [] }, null)
     case 'undo': {
       if (!s.past.length) return s

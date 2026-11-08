@@ -54,7 +54,7 @@ export function Learn() {
                 </div>
               ))}
             </dl>
-            {analysis.warnings.length > 0 && <p className="warn">⚠ {analysis.warnings[0]}</p>}
+            {analysis.warnings.length > 0 && <p className="warn"><b>Warning:</b> {analysis.warnings[0]}</p>}
           </div>
         </div>
 
@@ -65,8 +65,8 @@ export function Learn() {
           <a className="btn" href={`#/sandbox/${encodeCircuit(ladder.circuit)}`}>Open this circuit in the sandbox</a>
           <a className="btn" href="#/quiz">Practice with a quiz</a>
           <span className="spacer" />
-          {idx > 0 && <button className="btn" onClick={() => go(idx - 1)}>← Previous</button>}
-          {idx < LESSONS.length - 1 && <button className="btn primary" onClick={() => go(idx + 1)}>Next lesson →</button>}
+          {idx > 0 && <button className="btn" onClick={() => go(idx - 1)}>Previous</button>}
+          {idx < LESSONS.length - 1 && <button className="btn primary" onClick={() => go(idx + 1)}>Next lesson</button>}
         </div>
       </article>
     </div>
