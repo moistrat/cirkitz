@@ -65,7 +65,7 @@ const placeStep = (id: string, ref: Part, title: string, body: string, name: str
 export const STEPS: Step[] = [
   {
     id: 'welcome', info: true,
-    title: 'Welcome to Interactive EE',
+    title: 'Welcome to Cirkitz',
     body: 'A short hands-on tour of every mechanic: placing parts, wiring, reading measurements, editing values, undo, and quizzes. It takes about three minutes, runs on its own scratch board, and never touches your saved circuit.',
   },
   placeStep('battery', REF_BAT, 'Place a battery',

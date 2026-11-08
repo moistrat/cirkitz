@@ -1,4 +1,4 @@
-# Interactive EE
+# Cirkitz
 
 An interactive website for playing with and learning DC circuits. Build a circuit, watch the current flow, read live voltages and currents, and get quizzed.
 

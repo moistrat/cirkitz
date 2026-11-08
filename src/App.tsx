@@ -33,7 +33,7 @@ export default function App() {
             <rect width="32" height="32" rx="6" className="logo-bg" />
             <path d="M4 16h6l2-5 4 10 3-8 2 3h7" className="logo-line" />
           </svg>
-          Interactive EE
+          Cirkitz
         </a>
         <nav>
           {TABS.map((t) => (

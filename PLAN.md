@@ -1,4 +1,4 @@
-# Interactive EE — Plan
+# Cirkitz — Plan
 
 An interactive website for playing with and learning DC circuits. You build a circuit, watch the current flow, read live voltages/currents, and get quizzed.
 

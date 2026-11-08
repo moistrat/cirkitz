@@ -8,12 +8,12 @@ interface Score { answered: number; correct: number; streak: number; best: numbe
 const EMPTY: Score = { answered: 0, correct: 0, streak: 0, best: 0 }
 
 export function Quiz() {
-  const [level, setLevel] = useState(() => load<number>('iee.quiz.level', 1))
-  const [score, setScore] = useState<Score>(() => load('iee.quiz.score', EMPTY))
+  const [level, setLevel] = useState(() => load<number>('cirkitz.quiz.level', 1))
+  const [score, setScore] = useState<Score>(() => load('cirkitz.quiz.score', EMPTY))
   const [q, setQ] = useState(() => generateQuestion(level))
   const [showMeasure, setShowMeasure] = useState(false)
 
-  const changeLevel = (l: number) => { setLevel(l); save('iee.quiz.level', l); setQ(generateQuestion(l)) }
+  const changeLevel = (l: number) => { setLevel(l); save('cirkitz.quiz.level', l); setQ(generateQuestion(l)) }
   const onResult = (ok: boolean) => {
     const next: Score = {
       answered: score.answered + 1,
@@ -21,9 +21,9 @@ export function Quiz() {
       streak: ok ? score.streak + 1 : 0,
       best: Math.max(score.best, ok ? score.streak + 1 : 0),
     }
-    setScore(next); save('iee.quiz.score', next)
+    setScore(next); save('cirkitz.quiz.score', next)
   }
-  const reset = () => { setScore(EMPTY); save('iee.quiz.score', EMPTY) }
+  const reset = () => { setScore(EMPTY); save('cirkitz.quiz.score', EMPTY) }
 
   return (
     <div className="page quiz">

@@ -4,7 +4,7 @@ import { Blocks, slug } from '../learn/Blocks'
 import { load, save } from '../state/storage'
 
 interface Progress { done: string[]; correct: string[] }
-const KEY = 'iee.learn.v2'
+const KEY = 'cirkitz.learn.v2'
 const EMPTY: Progress = { done: [], correct: [] }
 
 const Tick = () => (
@@ -15,13 +15,13 @@ const Tick = () => (
 
 export function Learn({ lessonId }: { lessonId?: string }) {
   const [progress, setProgress] = useState<Progress>(() => load(KEY, EMPTY))
-  const fallback = load<string>('iee.lesson2', LESSONS[0].id)
+  const fallback = load<string>('cirkitz.lesson2', LESSONS[0].id)
   const id = LESSONS.some((l) => l.id === lessonId) ? lessonId! : LESSONS.some((l) => l.id === fallback) ? fallback : LESSONS[0].id
   const idx = LESSONS.findIndex((l) => l.id === id)
   const lesson = LESSONS[idx]
   const unit = unitOf(id)!
 
-  useEffect(() => { save('iee.lesson2', id); window.scrollTo({ top: 0 }) }, [id])
+  useEffect(() => { save('cirkitz.lesson2', id); window.scrollTo({ top: 0 }) }, [id])
 
   const update = (p: Progress) => { setProgress(p); save(KEY, p) }
   const checkIds = useMemo(() => lesson.blocks.flatMap((b) => (b.t === 'check' ? [b.id] : [])), [lesson])

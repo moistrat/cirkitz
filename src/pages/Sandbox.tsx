@@ -14,7 +14,7 @@ import { Tutorial } from '../tutorial/Tutorial'
 import { STEPS } from '../tutorial/steps'
 import { Guide } from '../tutorial/steps'
 
-const STORE = 'iee.sandbox.v1'
+const STORE = 'cirkitz.sandbox.v1'
 const ORDER: Kind[] = ['battery', 'resistor', 'bulb', 'led', 'switch', 'isource']
 
 function startCircuit(): Circuit {
@@ -22,7 +22,7 @@ function startCircuit(): Circuit {
   return isCircuit(saved) && saved.parts.length ? saved : PRESETS[0].build()
 }
 
-const TOUR_SEEN = 'iee.tutorial.seen'
+const TOUR_SEEN = 'cirkitz.tutorial.seen'
 
 export function Sandbox({ shared, tutorialRequest = 0 }: { shared?: string; tutorialRequest?: number }) {
   const [main, dispatchMain] = useReducer(reducer, undefined, () => initialState(startCircuit()))
