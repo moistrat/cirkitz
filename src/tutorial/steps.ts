@@ -158,6 +158,6 @@ export const STEPS: Step[] = [
   },
   {
     id: 'finish', info: true, title: 'You know the controls',
-    body: 'Shortcuts: 1 to 6 pick a part, R rotates, V is wire / move, E erases, Delete removes, Ctrl/Cmd+Z undoes. Use Examples for ready-made circuits and Share link to send yours to someone. The Learn tab has guided lessons with sliders, and the Quiz tab has generated problems at four levels. You can reopen this tutorial any time from the header.',
+    body: 'Shortcuts: 1 to 6 pick a part, R rotates, V is wire / move, E erases, Delete removes, Ctrl/Cmd+Z undoes. Use Examples for ready-made circuits and Share link to send yours to someone. The Learn tab is a full course from "what is electricity" through AC, with interactive circuits and questions, and the Quiz tab has generated problems at four levels. You can reopen this tutorial any time from the header.',
   },
 ]

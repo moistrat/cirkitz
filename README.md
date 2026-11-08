@@ -4,7 +4,7 @@ An interactive website for playing with and learning DC circuits. Build a circui
 
 - **Tutorial** – an optional, playable walkthrough (offered on first visit, reopen any time from the header) that teaches placing, wiring, measuring, editing, erasing, undo, rotating and quizzes on a scratch board, with a "Do it for me" option on every step.
 - **Sandbox** – place batteries, resistors, bulbs, LEDs, switches and current sources on a grid, wire them up, and see animated charge flow (speed ∝ current, wire color ∝ voltage). Click a part to read V / I / P and edit its value. Undo/redo, save to the browser, export/import JSON, share links.
-- **Learn** – six short lessons (Ohm's law, series, parallel, voltage dividers, LEDs, power) each with a live circuit and sliders.
+- **Learn** – a 20-lesson course in four units: foundations (charge, voltage/current/resistance, AC vs DC, reading schematics), DC analysis (Ohm's law, power, series, parallel, dividers, Kirchhoff, real sources, diodes, measuring), beyond resistors (capacitors, inductors, reactance and filters) and analysis methods (node-voltage, superposition, Thevenin, safety). Each lesson has worked examples, live circuits or interactive graphs, check questions and progress tracking.
 - **Quiz** – four difficulty levels of generated circuits (V, I, R, P, equivalent resistance) with worked solutions, plus "Quiz me on this circuit" in the sandbox.
 
 Shortcuts in the sandbox: `1`–`6` pick a part, `R` rotate, `V` wire/move, `E` erase, `Delete` remove, `Ctrl/⌘Z` undo, `Esc` cancel. Right-click deletes.

@@ -46,7 +46,7 @@ export default function App() {
       </header>
       <main>
         {route.page === 'sandbox' && <Sandbox shared={route.arg} tutorialRequest={tutorialRequest} />}
-        {route.page === 'learn' && <Learn />}
+        {route.page === 'learn' && <Learn lessonId={route.arg} />}
         {route.page === 'quiz' && <Quiz />}
       </main>
     </>
